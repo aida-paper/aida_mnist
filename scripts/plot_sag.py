@@ -108,7 +108,7 @@ if __name__ == "__main__":
 
     imputed_failures = np.logical_and(unknown, failures == 1)
     imputed_successes = np.logical_and(unknown, failures == -1)
-    
+
     axs[3].scatter(u_window_normalized[imputed_failures], failures[imputed_failures], color="k", label=r"$r = 0$", s=1)
     axs[3].scatter(u_window_normalized[imputed_successes], failures[imputed_successes], color="k", label=r"$r = 0$", s=1)
     axs[3].scatter(u_window_normalized[r_window == 1], -r_window[r_window == 1], color="g", label=r"$r = 1$", s=1)
@@ -117,7 +117,7 @@ if __name__ == "__main__":
     axs[3].set_xlabel(r"Uncertainty $u$")
     axs[3].set_ylabel(r"Failure $f$")
     axs[3].set_yticks([-1, 0, 1])
-    
+
     fig.tight_layout(rect=[0, 0.1, 1, 1])
     handles = [scatter1, scatter2, scatter3, lin[0], p1[0], p2[0], g]
     labels = [r"$r = -1$", r"$r = 0$", r"$r = 1$", r"\texttt{LinRegres}", r"$P(f=-1|u)$", r"$P(f=1|u)$", r"$\gamma_i$"]
