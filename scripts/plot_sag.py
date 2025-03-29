@@ -123,7 +123,7 @@ if __name__ == "__main__":
     labels = [r"$r = -1$", r"$r = 0$", r"$r = 1$", r"\texttt{LinRegres}", r"$P(f=-1|u)$", r"$P(f=1|u)$", r"$\gamma_i$"]
     fig.legend(handles, labels, loc="center", bbox_to_anchor=(0.5, 0.1), ncol=7)
 
-    labels = [r"\textbf{A}", r"\textbf{B}", r"\textbf{C}"]
+    labels = [r"\textbf{A}", r"\textbf{B}", r"\textbf{C}", r"\textbf{D}"]
     for ax, label in zip(axs.flatten(), labels):
         ax.text(-0.1, -0.1, label, fontsize=8, fontweight="bold", va="top", ha="left", transform=ax.transAxes)
     fig.savefig("figures/sag.pdf")
