@@ -120,7 +120,7 @@ if __name__ == "__main__":
 
     fig.tight_layout(rect=[0, 0.1, 1, 1])
     handles = [scatter1, scatter2, scatter3, lin[0], p1[0], p2[0], g]
-    labels = [r"$r = -1$", r"$r = 0$", r"$r = 1$", r"\texttt{LinRegres}", r"$P(f=-1|u)$", r"$P(f=1|u)$", r"$\gamma_i$"]
+    labels = [r"$r = 0$", r"$r = 1$", r"$r = -1$", r"\texttt{LinRegres}", r"$P(f=-1|u)$", r"$P(f=1|u)$", r"$\gamma_i$"]
     fig.legend(handles, labels, loc="center", bbox_to_anchor=(0.5, 0.1), ncol=7)
 
     labels = [r"\textbf{A}", r"\textbf{B}", r"\textbf{C}", r"\textbf{D}"]
