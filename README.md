@@ -61,6 +61,12 @@ To reproduce the experiments from the paper run:
 python ./scripts/main.py
 ```
 
+To also reproduce the ablations from the paper run:
+
+```bash
+python ./scripts/ablations.py
+```
+
 #### Interactive training
 
 This will train LeNet model(s) interactively with SAG on the MNIST dataset.
@@ -91,7 +97,7 @@ Instead of training the models yourself, it is also possible to download the res
 python scripts/download_results.py
 ```
 
-## Plot training results
+## Reproduce plots in paper
 
 After training or downloading the results, you can plot the results as in the paper by doing:
 
@@ -100,6 +106,18 @@ python ./scripts/plot_results.py
 ```
 
 The resulting figure is save at `figures/mnist.pdf`.
+
+After downloading the results or performing the ablation experiments, you can plot the ablations plots by:
+
+```bash
+python ./scripts/plot_reg_albation.py
+```
+
+and
+
+```bash
+python ./scripts/plot_prand_albation.py
+```
 
 ## Acknowledgements
 

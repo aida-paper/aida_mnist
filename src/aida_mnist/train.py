@@ -34,10 +34,9 @@ def train(
     accelerator="gpu",
 ):
     # Set directory name and create save path
-    dir_name = f"i{iteration}_r{p_rand}_s{s_des}_u{u_normalization}_i{impute}_b{batch_size}_e{update_every}"
-    save_path = Path("results") / dir_name / f"{iteration}"
+    name = f"r{p_rand}_s{s_des}_u{u_normalization}_i{impute}_b{batch_size}_e{update_every}"
+    save_path = Path("results") / name / f"{iteration}"
     save_path.mkdir(parents=True, exist_ok=True)
-    name = f"{dir_name}_{iteration}"
 
     if save and not overwrite and (save_path / "results.npy").exists():
         print(f"Skipping {name}")
@@ -54,7 +53,7 @@ def train(
             "batch_size": batch_size,
             "update_every": update_every,
         }
-        logger = wandb.init(project="aida-mnist", name=name, config=config)
+        logger = wandb.init(project="aida-mnist", name=f"{name}_i{iteration}", config=config)
     data_root = Path("data")
     enable_model_summary = True if verbose else False
 
@@ -171,10 +170,10 @@ def train(
                 max_epochs=update_every,
                 enable_progress_bar=False,
                 max_steps=update_every,
-                enable_checkpointing=False,
                 log_every_n_steps=0,
                 enable_model_summary=enable_model_summary,
-                logger=None,
+                enable_checkpointing=False,
+                logger=False,
             )
             routine.train()
             trainer.fit(model=routine, datamodule=train_datamodule)

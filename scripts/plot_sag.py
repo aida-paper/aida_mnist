@@ -31,7 +31,7 @@ if __name__ == "__main__":
     i = args.rep
     s_des = float(args.s_des)
 
-    dir_name = f"i{i}_r{p_rand}_s{s_des}_u{u_normalization}_i{impute}_b{batch_size}_e{update_every}"
+    dir_name = f"r{p_rand}_s{s_des}_u{u_normalization}_i{impute}_b{batch_size}_e{update_every}"
     save_path = Path("results") / dir_name / f"{i}"
     if (save_path / "results.npy").exists():
         results = np.load(save_path / "results.npy", allow_pickle=True).item()
@@ -126,4 +126,5 @@ if __name__ == "__main__":
     labels = [r"\textbf{A}", r"\textbf{B}", r"\textbf{C}", r"\textbf{D}"]
     for ax, label in zip(axs.flatten(), labels):
         ax.text(-0.1, -0.1, label, fontsize=8, fontweight="bold", va="top", ha="left", transform=ax.transAxes)
+    plt.show()
     fig.savefig("figures/sag.pdf")

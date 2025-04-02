@@ -121,6 +121,7 @@ class CustomMNISTDataModule(TUDataModule):
             )
 
         warnings.filterwarnings("ignore", ".*does not have many workers.*")
+        warnings.filterwarnings("ignore", ".*but have no logger configured. You can enable one by doing.*")
         logging.getLogger("lightning.pytorch.utilities.rank_zero").setLevel(logging.WARNING)
         logging.getLogger("lightning.pytorch.accelerators.cuda").setLevel(logging.WARNING)
 

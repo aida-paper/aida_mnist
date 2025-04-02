@@ -35,7 +35,7 @@ if __name__ == "__main__":
     fp = np.zeros((9, reps))
     tn = np.zeros((9, reps))
     fn = np.zeros((9, reps))
-    for sens_i, s_des in enumerate([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]):
+    for sens_i, s_des in enumerate(s_des_list):
         sens = np.zeros((reps, (60_000 // batch_size)))
         spec = np.zeros((reps, (60_000 // batch_size)))
         system_success = np.zeros((reps, (60_000 // batch_size)))
@@ -44,7 +44,7 @@ if __name__ == "__main__":
         train_samples = np.zeros((reps, (60_000 // batch_size)))
 
         for i in range(reps):
-            dir_name = f"i{i}_r{p_rand}_s{s_des}_u{u_normalization}_i{impute}_b{batch_size}_e{update_every}"
+            dir_name = f"r{p_rand}_s{s_des}_u{u_normalization}_i{impute}_b{batch_size}_e{update_every}"
             save_path = Path("results") / dir_name / f"{i}"
             if (save_path / "results.npy").exists():
                 results = np.load(save_path / "results.npy", allow_pickle=True).item()
@@ -100,40 +100,42 @@ if __name__ == "__main__":
         axs[0, 0].plot(x, sens_mean, label=r"$\sigma_\mathrm{{des}}={}$".format(s_des), color=cmap[sens_i])
         axs[0, 0].fill_between(x, sens_mean - sens_std, sens_mean + sens_std, alpha=0.3, color=cmap[sens_i])
         axs[0, 0].plot(x, np.ones_like(x) * s_des, "--", color=cmap[sens_i])
-        axs[0, 0].set_ylabel("Sensitivity")
-        axs[0, 0].set_ylim(0, 1)
 
         axs[0, 1].plot(x, spec_mean, color=cmap[sens_i])
         axs[0, 1].fill_between(x, spec_mean - spec_std, spec_mean + spec_std, alpha=0.3, color=cmap[sens_i])
-        axs[0, 1].set_ylabel("Specificity")
-        axs[0, 1].set_ylim(0, 1)
 
         axs[0, 2].plot(x, query_rate_mean, color=cmap[sens_i])
         axs[0, 2].fill_between(
             x, query_rate_mean - query_rate_std, query_rate_mean + query_rate_std, alpha=0.3, color=cmap[sens_i]
         )
-        axs[0, 2].set_ylabel("Query Rate")
-        axs[0, 2].set_ylim(0, 1)
 
         axs[1, 0].plot(x, train_samples_mean, color=cmap[sens_i])
         axs[1, 0].fill_between(
             x, train_samples_mean - train_samples_std, train_samples_mean + train_samples_std, alpha=0.3, color=cmap[sens_i]
         )
-        axs[1, 0].set_ylabel("Train Samples")
 
         axs[1, 1].plot(x, novice_success_mean, color=cmap[sens_i])
         axs[1, 1].fill_between(
             x, novice_success_mean - novice_success_std, novice_success_mean + novice_success_std, alpha=0.3, color=cmap[sens_i]
         )
-        axs[1, 1].set_ylabel("Novice Success Rate")
-        axs[1, 1].set_ylim(0, 1)
 
         axs[1, 2].plot(x, system_success_mean, color=cmap[sens_i])
         axs[1, 2].fill_between(
             x, system_success_mean - system_success_std, system_success_mean + system_success_std, alpha=0.3, color=cmap[sens_i]
         )
-        axs[1, 2].set_ylabel("System Success Rate")
-        axs[1, 2].set_ylim(0, 1)
+
+    axs[0, 0].set_ylabel("Sensitivity")
+    axs[0, 0].set_ylim(0, 1)
+    axs[0, 1].set_ylabel("Specificity")
+    axs[0, 1].set_ylim(0, 1)
+    axs[0, 2].set_ylabel("Query Rate")
+    axs[0, 2].set_ylim(0, 1)
+    axs[1, 0].set_ylabel("Train Samples")
+    axs[1, 1].set_ylabel("Novice Success Rate")
+    axs[1, 1].set_ylim(0, 1)
+    axs[1, 2].set_ylabel("System Success Rate")
+    axs[1, 2].set_ylim(0, 1)
+
     for ax in axs.flatten():
         ax.ticklabel_format(axis="y", style="sci", scilimits=(2, 1))
 
@@ -148,6 +150,7 @@ if __name__ == "__main__":
     axs[1, 0].set_xlabel("Step")
     axs[1, 1].set_xlabel("Step")
     axs[1, 2].set_xlabel("Step")
+    plt.show()
     fig.savefig("figures/mnist.pdf")
 
     # Create table
@@ -157,7 +160,7 @@ if __name__ == "__main__":
     sens_std = np.std(sens, axis=1)
     spec_mean = np.mean(spec, axis=1)
     spec_std = np.std(spec, axis=1)
-    for i, s_des in enumerate([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]):
+    for i, s_des in enumerate(s_des_list):
         print(
-            f"{s_des} & {sens_mean[i]:.3f} $\pm$ {sens_std[i]:.3f} & {spec_mean[i]:.3f} $\pm$ {spec_std[i]:.3f} & {sens_mean[i]+spec_mean[i]:.3f} \\\\"
+            f"{s_des} & {sens_mean[i]:.3f} $\pm$ {sens_std[i]:.3f} & {spec_mean[i]:.3f} $\pm$ {spec_std[i]:.3f} & {sens_mean[i]+spec_mean[i]-1:.3f} \\\\"
         )
