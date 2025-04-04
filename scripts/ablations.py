@@ -13,10 +13,10 @@ if __name__ == "__main__":
     train_kwargs = []
     s_des_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9] if args.s_des == "all" else [float(args.s_des)]
 
-    # normalization and imputation ablations
     for i in range(args.reps):
         for s_des in s_des_list:
-            for u_normalization, impute in zip([True, True], [False, True], [True, False]):
+            # normalization and imputation ablations
+            for u_normalization, impute in [[True, True], [False, True], [True, False]]:
                 train_kwargs.append(
                     {
                         "iteration": i,
@@ -28,9 +28,7 @@ if __name__ == "__main__":
                     }
                 )
 
-    # p_rand ablations
-    for i in range(args.reps):
-        for s_des in s_des_list:
+            # p_rand ablations
             for p_rand in [0.05, 0.1, 0.2]:
                 train_kwargs.append(
                     {
