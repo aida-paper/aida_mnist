@@ -83,20 +83,60 @@ if __name__ == "__main__":
     scatter2 = axs[0].scatter(k_window[r_window == 1], u_window[r_window == 1], color="g", s=1)
     scatter3 = axs[0].scatter(k_window[r_window == -1], u_window[r_window == -1], color="r", s=1)
     lin = axs[0].plot(k_window, u_predictions, color="b", linestyle="-")
+    axs[0].plot(k_window, u_predictions, color="b", linestyle="-")
+    axs[0].annotate(
+        "",
+        xy=(k_window[0] - 0.04, u_predictions[-1]),
+        xytext=(k_window[0] - 0.04, u_predictions[0]),
+        arrowprops=dict(arrowstyle="-", shrinkA=5, shrinkB=5, color="k", connectionstyle="bar"),
+        fontsize=8,
+        color="k",
+        ha="center",
+        va="center",
+    )
+    axs[0].text(
+        k_window[0] - 0.42,
+        (u_predictions[0] + u_predictions[-1]) / 2,
+        r"$w_\mathrm{lin}$",
+    )
     axs[0].set_xlabel(r"Update count $k$")
     axs[0].set_ylabel(r"Uncertainty $u$")
     axs[0].set_xticks([92, 93])
-    axs[0].set_xlim([91.8, 93.2])
+    axs[0].set_xlim([91.55, 93.2])
 
     axs[1].scatter(u_window_normalized[r_window == -1], -r_window[r_window == -1], color="r", s=1)
     axs[1].scatter(u_window_normalized[r_window == 0], -r_window[r_window == 0], color="k", s=1)
+    axs[1].annotate(
+        "",
+        xy=(min(u_window_normalized[r_window == 0]), -0.2),
+        xytext=(max(u_window_normalized[r_window == 0]), -0.2),
+        arrowprops=dict(arrowstyle="-", shrinkA=10, shrinkB=10, color="k", connectionstyle="bar"),
+        fontsize=8,
+        color="k",
+        ha="center",
+        va="center",
+    )
+    axs[1].text(
+        (min(u_window_normalized[r_window == 0]) + max(u_window_normalized[r_window == 0])) / 2,
+        0.22,
+        r"\textnormal{Not queried}",
+        ha="center",
+        va="bottom",
+    )
     axs[1].scatter(u_window_normalized[r_window == 1], -r_window[r_window == 1], color="g", s=1)
     axs[1].set_xlabel(r"Uncertainty $u$")
-    axs[1].set_ylabel(r"Failure $f$")
+    axs[1].set_ylabel(r"Negated reward $-r$")
     axs[1].set_yticks([-1, 0, 1])
 
     p1 = axs[2].plot(u_window_normalized_sorted, probas_sorted[:, 0], color="g")
     p2 = axs[2].plot(u_window_normalized_sorted, probas_sorted[:, 1], color="r")
+    axs[2].text(
+        u_window_normalized_sorted[0] + 0.02,
+        0.5,
+        r"\textnormal{Fit on data in} \textbf{B}",
+        ha="left",
+        va="center",
+    )
     axs[2].set_xlabel(r"Uncertainty $u$")
     axs[2].set_ylabel("Probability $P$")
 
@@ -110,6 +150,23 @@ if __name__ == "__main__":
     imputed_successes = np.logical_and(unknown, failures == -1)
 
     axs[3].scatter(u_window_normalized[imputed_failures], failures[imputed_failures], color="k", label=r"$r = 0$", s=1)
+    axs[3].annotate(
+        "",
+        xy=(min(u_window_normalized[imputed_failures]), 1),
+        xytext=(min(u_window_normalized[imputed_failures]), 0.5),
+        arrowprops=dict(arrowstyle="->", shrinkA=5, shrinkB=5, color="k"),
+        fontsize=8,
+        color="k",
+        ha="center",
+        va="center",
+    )
+    axs[3].text(
+        min(u_window_normalized[imputed_failures]) + 0.02,
+        0.6,
+        r"$\sim P(f|u)$",
+        ha="center",
+        va="top",
+    )
     axs[3].scatter(u_window_normalized[imputed_successes], failures[imputed_successes], color="k", label=r"$r = 0$", s=1)
     axs[3].scatter(u_window_normalized[r_window == 1], -r_window[r_window == 1], color="g", label=r"$r = 1$", s=1)
     axs[3].scatter(u_window_normalized[r_window == -1], -r_window[r_window == -1], color="r", label=r"$r = -1$", s=1)
@@ -119,12 +176,13 @@ if __name__ == "__main__":
     axs[3].set_yticks([-1, 0, 1])
 
     fig.tight_layout(rect=[0, 0.1, 1, 1])
-    handles = [scatter1, scatter2, scatter3, lin[0], p1[0], p2[0], g]
-    labels = [r"$r = 0$", r"$r = 1$", r"$r = -1$", r"\texttt{LinRegres}", r"$P(f=-1|u)$", r"$P(f=1|u)$", r"$\gamma_i$"]
+    handles = [scatter2, scatter1, scatter3, lin[0], p1[0], p2[0], g]
+    labels = [r"$r = 1$", r"$r = 0$", r"$r = -1$", r"\texttt{LinRegres}", r"$P(f=-1|u)$", r"$P(f=1|u)$", r"$\gamma_i$"]
     fig.legend(handles, labels, loc="center", bbox_to_anchor=(0.5, 0.1), ncol=7)
 
     labels = [r"\textbf{A}", r"\textbf{B}", r"\textbf{C}", r"\textbf{D}"]
     for ax, label in zip(axs.flatten(), labels):
+        ax.grid(False)
         ax.text(-0.1, -0.1, label, fontsize=8, fontweight="bold", va="top", ha="left", transform=ax.transAxes)
     plt.show()
     fig.savefig("figures/sag.pdf")
